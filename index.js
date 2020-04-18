@@ -79,7 +79,7 @@ app.post('/login', async function(req, res, next) {
     }
 });
 
-//protected route
+//protected route (check token)
 
 app.get('/protected', passport.authenticate('jwt', {session: false}), function(req, res){
     res.json({
@@ -100,7 +100,7 @@ User.sync()
     .catch(err => console.log('oh no!')); 
 
 
-//ceate user
+//create user
 const createUser = async({name, password}) => {
     return await User.create({name, password});
 };
@@ -121,5 +121,5 @@ const getUser = async obj =>{
 var port = process.env.PORT || 3000;
 
 sequelize.sync().then(() => {
-    app.listen(port, () => console.log('app listening'));
+    app.listen(port, () => console.log('app listening on port' +port));
 });
