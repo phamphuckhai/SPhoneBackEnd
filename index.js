@@ -3,6 +3,11 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+//connect sequelize
+const {sequelize} = require('./models');
+//declare model
+const User = require('./models').users;
+
 //parse application
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -14,48 +19,24 @@ app.get('/', function(req, res){
 
 //route list user
 app.get('/users', function(req, res){
-    getAllUsers().then(user => res.json(user))
+    getAllUsers().then(users => res.json(users))
 });
 
 //route register
 app.post('/register', function(req, res, next){
     const {name, password} = req.body;
-    createUser({name, password}).then(user => 
-        res.json({user, msg: 'account created successfully '})
+    createUser({name, password}).then(users => 
+        res.json({users, msg: 'account created successfully '})
         );
 })
-
-//start app
-app.listen(3000, function(){
-    console.log('Express is running on port 3000');
-});
-
-//init sequeliz
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize({
-    database: 'users_db',
-    username: 'root',
-    password: '',
-    dialect: 'mysql',
-});
 
 //check connect
 sequelize
     .authenticate()
     .then(() => console.log('Connection has been established successfully.'))
     .catch(err => console.error('Unable to connect to the database', err));
-//create table with user model
 
-const User = sequelize.define('user',{
-    name: {
-        type: Sequelize.STRING,
-    },
-    password:{
-        type: Sequelize.STRING,
-    }
-});
-
-//Create table with user model 
+//check connect table user
 
 User.sync()
     .then(() => console.log('successfully'))
@@ -79,3 +60,9 @@ const getUser = async obj =>{
     });
 } 
 
+//app start
+var port = process.env.PORT || 3000;
+
+sequelize.sync().then(() => {
+    app.listen(port, () => console.log('app listening'));
+});
