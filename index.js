@@ -2,17 +2,22 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
+
+//parse application
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+//basic route
 app.get('/', function(req, res){
     res.json({message: 'Express is up!'});
 });
 
-app.get('/', function(req, res){
-    Users().then(user => res.json(user))
+//route list user
+app.get('/users', function(req, res){
+    getAllUsers().then(user => res.json(user))
 });
 
+//route register
 app.post('/register', function(req, res, next){
     const {name, password} = req.body;
     createUser({name, password}).then(user => 
@@ -20,6 +25,7 @@ app.post('/register', function(req, res, next){
         );
 })
 
+//start app
 app.listen(3000, function(){
     console.log('Express is running on port 3000');
 });
@@ -38,6 +44,22 @@ sequelize
     .authenticate()
     .then(() => console.log('Connection has been established successfully.'))
     .catch(err => console.error('Unable to connect to the database', err));
+//create table with user model
+
+const User = sequelize.define('user',{
+    name: {
+        type: Sequelize.STRING,
+    },
+    password:{
+        type: Sequelize.STRING,
+    }
+});
+
+//Create table with user model 
+
+User.sync()
+    .then(() => console.log('successfully'))
+    .catch(err => console.log('oh no!')); 
 
 
 //ceate user
@@ -46,7 +68,7 @@ const createUser = async({name, password}) => {
 };
 
 //List Users
-const Users = async() => {
+const getAllUsers = async() => {
     return await User.findAll();
 };
 
