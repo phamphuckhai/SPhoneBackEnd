@@ -1,11 +1,16 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "users_db",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "dialect": "mssql",
+    "operatorsAliases": false,
+    "dialectOptions": {
+      "options": {
+        "encrypt": true
+      }
+    }
   },
   "test": {
     "username": "root",
