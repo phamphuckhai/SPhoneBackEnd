@@ -72,7 +72,6 @@ app.post("/login", async function (req, res, next) {
     if (!user) {
       res.status(401).json({ msg: "No such user found", user });
     }
-
     if (user.password === password) {
       let payload = { id: user.id };
       let token = jwt.sign(payload, jwtOptions.secretOrKey);
