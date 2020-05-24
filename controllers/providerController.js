@@ -22,6 +22,15 @@ const createProvider = async ({ name, address, phone }) => {
       where: condition,
     });
   };
+   //get provider
+   const getProviderTwoConditon = async ({id, name}) => {
+    return await provider.findAll({
+      where: {
+          id: id,
+          name: name
+      }
+    });
+  };
   //delete provider
   const deleteProvider = async (condition) => {
     return await provider.destroy({
@@ -56,4 +65,11 @@ const createProvider = async ({ name, address, phone }) => {
   module.exports.deleteProviderById = function (req, res){
     let id = req.params.id;
     deleteProvider({id}).then((provider)=> res.json("delete successfully!"))
+  }
+
+  module.exports.searchProvideByIdAndName = function (req, res){
+    let id = req.query.id;
+    let name = req.query.name;
+    getProviderTwoConditon({id, name}).then((provider)=> res.json(provider))
+    console.log(name)
   }

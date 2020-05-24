@@ -7,6 +7,7 @@ const providerController = require("../controllers/providerController");
 router.get("/providers", providerController.getProviders);
 
 //Search >?
+router.get("/provider/Search", providerController.searchProvideByIdAndName);
 
 //route get provider from id
 router.get("/provider/:id", providerController.getProviderById);
@@ -17,6 +18,7 @@ router.delete("/provider/:id", providerController.deleteProviderById);
 
 //route add provider
 router.post("/provider", providerController.addProvider);
+
 
 
 module.exports = router;
