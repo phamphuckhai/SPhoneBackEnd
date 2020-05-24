@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "phamphuckhai",
+    "username": "root",
     "password": "123123asD",
     "database": "users_db",
-    "host": "phamphuckhaisever.database.windows.net",
-    "dialect": "mssql",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
     "operatorsAliases": false,
     "dialectOptions": {
       "options": {

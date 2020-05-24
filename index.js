@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const userController = require("./routers/userRouter");
+const providerRouter = require("./routers/providerRouter");
 const cors = require("cors");
 //connect sequelize
 const { sequelize } = require("./models");
@@ -12,8 +13,9 @@ app.use(cors());
 //parse application
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//basic route
+//route to use
 app.use(userController);
+app.use(providerRouter);
 app.get("/", function (req, res) {
   res.json({ message: "Express is up!" });
 });
