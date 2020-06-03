@@ -1,0 +1,13 @@
+{
+  "admin": {
+    "grants": [
+      {
+        "resource": "providers",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
+    ]
+  }
+}

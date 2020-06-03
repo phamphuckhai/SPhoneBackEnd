@@ -1,75 +1,81 @@
 //declare model
 const provider = require("../models").providers;
-//check connect table user
-
-provider.sync()
-  .then(() => console.log("successfully"))
-  .catch((err) => console.log("oh no!"));
+const {Sequelize} = require("../models");
 
 //create provider
-const createProvider = async ({ name, address, phone }) => {
-    return await provider.create({ name, address, phone });
-  };
-  
-  //get providers
-  const getAllProvider = async () => {
-    return await provider.findAll();
-  };
-  
-  //get provider
-  const getProvider = async (condition) => {
-    return await provider.findOne({
-      where: condition,
+const createProvider = async ({name, address, phone}) => {
+    return await provider.create({name, address, phone});
+};
+
+//search Provider
+const searchProvider = async (condition) => {
+    let Option = {};
+    Object.keys(condition).forEach((val, index) => {
+        if (typeof condition[val] == 'string') {
+            Option[val] = {[Sequelize.Op.like]: `%${condition[val]}%`};
+        } else {
+            Option[val] = condition[val];
+        }
     });
-  };
-   //get provider
-   const getProviderTwoConditon = async ({id, name}) => {
     return await provider.findAll({
-      where: {
-          id: id,
-          name: name
-      }
+        where: Option,
     });
-  };
-  //delete provider
-  const deleteProvider = async (condition) => {
+};
+
+//Get Provider
+const getProvider = async (condition) => {
+    return await provider.findOne({
+        where: condition,
+    });
+};
+
+//delete provider
+const deleteProvider = async (condition) => {
     return await provider.destroy({
-      where: condition,
+        where: condition,
     });
-  };
-  
-  module.exports.addProvider = function (req, res, next) {
-    const { name, address, phone } = req.body;
-    createProvider({ name, address, phone }).then((providers) =>
-      res.json({ providers, msg: "provider created successfully " })
+};
+
+module.exports.addProvider = function (req, res, next) {
+    const {name, address, phone} = req.body;
+    createProvider({name, address, phone}).then((providers) =>
+        res.json({providers, msg: "provider created successfully "})
     );
-  }
+}
 
-  module.exports.getProviders = function (req, res) {
-    getAllProvider().then((providers) => res.json(providers));
-  }
-
-  module.exports.getProviderById = function (req, res) {
+module.exports.getProviderById = function (req, res) {
     let id = req.params.id;
-    getProvider({id}).then((providers)=> res.json(providers));
-  }
-  
-  module.exports.updateProviderById = function (req, res) {
+    getProvider({id}).then((providers) => {
+        if (!providers)
+            return res.sendStatus(404);
+        else
+            return res.send(providers);
+    });
+}
+
+module.exports.updateProviderById = function (req, res) {
     let id = req.params.id;
     let newPvd = req.body;
-    getProvider({id}).then((provider)=> 
+    getProvider({id}).then((provider) => {
+        if(!provider)
+            return res.sendStatus(404);
         provider.update(newPvd).then(newProvider =>
             res.json(newProvider))
+        }
     );
-  }
-  module.exports.deleteProviderById = function (req, res){
+}
+module.exports.deleteProviderById = function (req, res) {
     let id = req.params.id;
-    deleteProvider({id}).then((provider)=> res.json("delete successfully!"))
-  }
+    deleteProvider({id}).then((provider) => res.json("delete successfully!"))
+}
 
-  module.exports.searchProvideByIdAndName = function (req, res){
-    let id = req.query.id;
-    let name = req.query.name;
-    getProviderTwoConditon({id, name}).then((provider)=> res.json(provider))
-    console.log(name)
-  }
+//Search provider
+module.exports.search = async function (req, res) {
+    const cond = req.query;
+    console.log('query', cond);
+    const providers = await searchProvider(cond);
+    if (!providers)
+        res.sendStatus(404);
+    else
+        res.send(providers);
+}

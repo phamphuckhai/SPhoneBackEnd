@@ -1,16 +1,11 @@
 {
   "development": {
     "username": "root",
-    "password": "123123asD",
-    "database": "users_db",
+    "password": "admin",
+    "database": "sphone",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "operatorsAliases": false,
-    "dialectOptions": {
-      "options": {
-        "encrypt": true
-      }
-    }
+    "operatorsAliases": false
   },
   "test": {
     "username": "root",
