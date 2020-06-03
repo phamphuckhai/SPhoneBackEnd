@@ -5,23 +5,22 @@ const router = Router();
 const providerController = require("../controllers/providerController");
 const {checkAccess} = require('../utils/permission');
 
-//route list provider
-router.get("/providers",
+//Search, get, get all providers
+router.get("/",
     authorize('read', 'providers'),
-    providerController.getProviders);
-
-//Search >?
-router.get("/provider/Search", providerController.searchProvideByIdAndName);
+    providerController.search);
 
 //route get provider from id
-router.get("/provider/:id", providerController.getProviderById);
+router.get("/:id", providerController.getProviderById);
+
 //route Put provider 
-router.put("/provider/:id", providerController.updateProviderById);
+router.put("/:id", providerController.updateProviderById);
+
 //route delete provider
-router.delete("/provider/:id", providerController.deleteProviderById);
+router.delete("/:id", providerController.deleteProviderById);
 
 //route add provider
-router.post("/provider", providerController.addProvider);
+router.post("/", providerController.addProvider);
 
 
 module.exports = router;

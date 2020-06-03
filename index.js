@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 //route to use
 app.use('/permissions', permissionRouter);
 app.use(userController);
-app.use(checkPassport, providerRouter);
+app.use('/providers',checkPassport, providerRouter);
 
 app.get("/", function (req, res) {
     res.json({message: "Express is up!"});
