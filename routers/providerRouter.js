@@ -11,16 +11,26 @@ router.get("/",
     providerController.search);
 
 //route get provider from id
-router.get("/:id", providerController.getProviderById);
+router.get("/:id",
+    authorize('read', 'providers'),
+    providerController.getProviderById
+);
 
 //route Put provider 
-router.put("/:id", providerController.updateProviderById);
+router.put("/:id",
+    authorize('update', 'providers'),
+    providerController.updateProviderById);
 
 //route delete provider
-router.delete("/:id", providerController.deleteProviderById);
+router.delete("/:id",
+    authorize('delete', 'providers'),
+    providerController.deleteProviderById
+);
 
 //route add provider
-router.post("/", providerController.addProvider);
-
+router.post("/",
+    authorize('create', 'providers'),
+    providerController.addProvider
+);
 
 module.exports = router;
