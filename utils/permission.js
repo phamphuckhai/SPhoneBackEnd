@@ -3,9 +3,15 @@ import {AccessControl} from 'role-acl';
 
 const accessControl = new AccessControl(grants);
 
-export const checkAccess = (role, action, resource, req, res, next) => {
+export const authorize = (action, resource) => {
     return (req, res, next) => {
-        accessControl.can(role).execute(action).sync().on(resource);
+        const {role} = req.user;
+        const canAccess = accessControl.can(role).execute(action).sync().on(resource).granted;
+        if (canAccess)
+            next();
+        else {
+            res.sendStatus(401);
+        }
     }
 };
 

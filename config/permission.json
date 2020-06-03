@@ -2,7 +2,7 @@
   "admin": {
     "grants": [
       {
-        "resource": "provider",
+        "resource": "providers",
         "action": "*",
         "attributes": [
           "*"

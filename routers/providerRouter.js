@@ -1,3 +1,5 @@
+import {authorize} from "../utils/permission";
+
 const {Router} = require("express");
 const router = Router();
 const providerController = require("../controllers/providerController");
@@ -5,10 +7,7 @@ const {checkAccess} = require('../utils/permission');
 
 //route list provider
 router.get("/providers",
-    (req, res, next) => {
-        console.log(req.user);
-        next();
-    },
+    authorize('read', 'providers'),
     providerController.getProviders);
 
 //Search >?
