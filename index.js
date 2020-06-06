@@ -1,3 +1,5 @@
+import {customerRouter} from "./routers/customerRouter";
+
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -6,7 +8,7 @@ const cors = require("cors");
 //connect sequelize
 const {sequelize} = require("./models");
 
-const userController = require("./routers/userRouter");
+const userRouter = require("./routers/userRouter");
 const providerRouter = require("./routers/providerRouter");
 const {permissionRouter} = require('./routers/permissionRouter');
 
@@ -20,8 +22,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //route to use
 app.use('/permissions', permissionRouter);
-app.use(userController);
-app.use('/providers',checkPassport, providerRouter);
+app.use(userRouter);
+app.use('/providers', checkPassport, providerRouter);
+app.use('/customers', checkPassport, customerRouter);
 
 app.get("/", function (req, res) {
     res.json({message: "Express is up!"});
