@@ -2,11 +2,11 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('species', [{
+    return queryInterface.bulkInsert('categories', [{
       name: 'điện thoại'
     },
     {
-      name: 'may tinh bang'
+      name: 'máy tính bảng'
     }], {
     }
     );
@@ -14,6 +14,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('species', null, {});
+    return queryInterface.bulkDelete('categories', null, {});
   }
 };
