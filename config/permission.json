@@ -7,13 +7,6 @@
         "attributes": [
           "*"
         ]
-      },
-      {
-        "resource": "customers",
-        "action": "*",
-        "attributes": [
-          "*"
-        ]
       }
     ]
   }
