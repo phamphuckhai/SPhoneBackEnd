@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Customer.associate = function (models) {
         // associations can be defined here
+        Customer.hasMany(models.orders, {
+        as: 'customer'
+    })
     };
+
+    
     return Customer;
 };

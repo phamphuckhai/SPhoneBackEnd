@@ -10,6 +10,7 @@ const {sequelize} = require("./models");
 
 const userRouter = require("./routers/userRouter");
 const providerRouter = require("./routers/providerRouter");
+const productRoter = require("./routers/productRouter");
 const {permissionRouter} = require('./routers/permissionRouter');
 
 const {checkPassport} = require('./controllers/userController');
@@ -25,6 +26,7 @@ app.use('/permissions', permissionRouter);
 app.use(userRouter);
 app.use('/providers', checkPassport, providerRouter);
 app.use('/customers', checkPassport, customerRouter);
+app.use('/products', checkPassport, productRoter);
 
 app.get("/", function (req, res) {
     res.json({message: "Express is up!"});

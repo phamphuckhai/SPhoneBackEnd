@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     providers.associate = function (models) {
         // associations can be defined here
+        providers.belongsTo(models.orders, {
+            as: 'provider'
+          })
     };
     return providers;
 };

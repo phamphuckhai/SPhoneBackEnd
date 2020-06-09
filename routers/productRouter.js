@@ -7,29 +7,29 @@ const {checkAccess} = require('../utils/permission');
 
 //Search, get, get all providers
 router.get("/",
-    authorize('read', 'providers'),
+    authorize('read', 'products'),
     productController.search);
 
 //route get provider from id
 router.get("/:id",
-    authorize('read', 'providers'),
+    authorize('read', 'products'),
     productController.getProductById
 );
 
 //route Put provider 
 router.put("/:id",
-    authorize('update', 'providers'),
+    authorize('update', 'products'),
     productController.updateProductById);
 
 //route delete provider
 router.delete("/:id",
-    authorize('delete', 'providers'),
+    authorize('delete', 'products'),
     productController.deleteProductById
 );
 
 //route add provider
 router.post("/",
-    authorize('create', 'providers'),
+    authorize('create', 'products'),
     productController.addProduct
 );
 

@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         products.belongsTo(models.manufacture, {
             as: 'manufacture'
         })
+
+        products.belongsToMany(models.orderDetails, {through: 'products_orderDetail'})
     };
     return products;
 };

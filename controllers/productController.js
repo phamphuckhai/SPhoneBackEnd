@@ -3,8 +3,8 @@ const product = require("../models").products;
 const {Sequelize} = require("../models");
 
 //create provider
-const createProduct = async ({name, codeName, description, madeIn, amount}) => {
-    return await provider.create({name, codeName, description, madeIn, amount});
+const createProduct = async ({name, codeName, description, madeIn, amount, categoryId, manufactureId}) => {
+    return await provider.create({name, codeName, description, madeIn, amount, categoryId, manufactureId});
 };
 
 //search Provider
@@ -37,9 +37,9 @@ const deleteProduct = async (condition) => {
 };
 
 module.exports.addProduct = function (req, res, next) {
-    const {name, codeName, description, madeIn, amount} = req.body;
-    createProvider({name, codeName, description, madeIn, amount}).then((providers) =>
-        res.json({products, msg: "provider created successfully "})
+    const {name, codeName, description, madeIn, amount, categoryId, manufactureId} = req.body;
+    createProvider({name, codeName, description, madeIn, amount, categoryId, manufactureId}).then((products) =>
+        res.json({products, msg: "products created successfully "})
     );
 }
 
@@ -66,7 +66,7 @@ module.exports.updateProductById = function (req, res) {
 }
 module.exports.deleteProductById = function (req, res) {
     let id = req.params.id;
-    deleteProduct({id}).then((product) => res.json("delete successfully!"))
+    deleteProduct({id}).then((product) => res.json("delete product successfully!"))
 }
 
 //Search provider
