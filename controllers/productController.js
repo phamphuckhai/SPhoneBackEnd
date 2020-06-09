@@ -4,7 +4,7 @@ const {Sequelize} = require("../models");
 
 //create provider
 const createProduct = async ({name, codeName, description, madeIn, amount, categoryId, manufactureId}) => {
-    return await provider.create({name, codeName, description, madeIn, amount, categoryId, manufactureId});
+    return await product.create({name, codeName, description, madeIn, amount, categoryId, manufactureId});
 };
 
 //search Provider
@@ -38,7 +38,7 @@ const deleteProduct = async (condition) => {
 
 module.exports.addProduct = function (req, res, next) {
     const {name, codeName, description, madeIn, amount, categoryId, manufactureId} = req.body;
-    createProvider({name, codeName, description, madeIn, amount, categoryId, manufactureId}).then((products) =>
+    createProduct({name, codeName, description, madeIn, amount, categoryId, manufactureId}).then((products) =>
         res.json({products, msg: "products created successfully "})
     );
 }
