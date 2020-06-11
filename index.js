@@ -8,7 +8,8 @@ const cors = require("cors");
 //connect sequelize
 const {sequelize} = require("./models");
 
-const userRouter = require("./routers/userRouter");
+const authenticationRouter = require("./routers/authenticationRouter");
+const userRouter = require("./routers/userRouter")
 const providerRouter = require("./routers/providerRouter");
 const productRoter = require("./routers/productRouter");
 const {permissionRouter} = require('./routers/permissionRouter');
@@ -23,7 +24,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //route to use
 app.use('/permissions', permissionRouter);
-app.use(userRouter);
+app.use(authenticationRouter);
+app.use('/users', checkPassport, userRouter);
 app.use('/providers', checkPassport, providerRouter);
 app.use('/customers', checkPassport, customerRouter);
 app.use('/products', productRoter);
