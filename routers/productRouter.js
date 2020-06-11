@@ -29,6 +29,7 @@ router.delete("/:id",
 
 //route add provider
 router.post("/",
+    authorize('create', 'products'),
     productController.addProduct
 );
 

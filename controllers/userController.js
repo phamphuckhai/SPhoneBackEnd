@@ -31,7 +31,35 @@ passport.initialize();
 
 //create user
 const createUser = async ({name, password}) => {
-    return await User.create({name, password});
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+    }
+    console.log('req', req.body);
+    const {name, password} = req.body;
+    if (name && password) {
+        let user = await getUser({name});
+        if (!user) {
+            return await User.create({name, password});
+        }
+        else {
+            res.status(401).json({msg: "User has been existed"});
+        }
+    }
+};
+
+const searchUser = async (condition) => {
+    let Option = {};
+    Object.keys(condition).forEach((val, index) => {
+        if (typeof condition[val] == 'string') {
+            Option[val] = {[Sequelize.Op.like]: `%${condition[val]}%`};
+        } else {
+            Option[val] = condition[val];
+        }
+    });
+    return await User.findAll({
+        where: Option,
+    });
 };
 
 //List Users
@@ -50,6 +78,13 @@ const getUser = async (condition) => {
 function checkErrors(req, res) {
 
 }
+
+//delete user
+const deleteUser = async (condition) => {
+    return await User.destroy({
+        where: condition,
+    });
+};
 
 module.exports.getUsers = function (req, res) {
     getAllUsers().then((users) => res.json(users));
@@ -82,6 +117,44 @@ module.exports.login = async function (req, res, next) {
             res.status(401).json({msg: "Password is incorrect"});
         }
     }
+}
+
+//Search User
+module.exports.search = async function (req, res) {
+    const cond = req.query;
+    console.log('query', cond);
+    const users = await searchUser(cond);
+    if (!users)
+        res.sendStatus(404);
+    else
+        res.send(users);
+}
+
+module.exports.getUserById = function (req, res) {
+    let id = req.params.id;
+    getUser({id}).then((user) => {
+        if (!user)
+            return res.sendStatus(404);
+        else
+            return res.send(user);
+    });
+}
+
+module.exports.deleteUserById = function (req, res) {
+    let id = req.params.id;
+    deleteUser({id}).then((user) => res.json("delete successfully!"))
+}
+
+module.exports.updateUserById = function (req, res) {
+    let id = req.params.id;
+    let newUsr = req.body;
+    getUser({id}).then((user) => {
+        if(!user)
+            return res.sendStatus(404).json("don't have user");
+        user.update(newUsr).then(newUser =>
+            res.json(newUser))
+        }
+    );
 }
 
 module.exports.checkPassport = passport.authenticate("jwt", {session: false})
