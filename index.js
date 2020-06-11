@@ -28,7 +28,7 @@ app.use(authenticationRouter);
 app.use('/users', checkPassport, userRouter);
 app.use('/providers', checkPassport, providerRouter);
 app.use('/customers', checkPassport, customerRouter);
-app.use('/products', productRoter);
+app.use('/products', checkPassport, productRoter);
 
 app.get("/", function (req, res) {
     res.json({message: "Express is up!"});

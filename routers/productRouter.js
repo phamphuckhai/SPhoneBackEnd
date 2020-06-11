@@ -3,31 +3,30 @@ import {authorize} from "../utils/permission";
 const {Router} = require("express");
 const router = Router();
 const productController = require("../controllers/productController");
-const {checkAccess} = require('../utils/permission');
 
-//Search, get, get all providers
+//Search, get, get all products
 router.get("/",
     authorize('read', 'products'),
     productController.search);
 
-//route get provider from id
+//route get products from id
 router.get("/:id",
     authorize('read', 'products'),
     productController.getProductById
 );
 
-//route Put provider 
+//route Put products 
 router.put("/:id",
     authorize('update', 'products'),
     productController.updateProductById);
 
-//route delete provider
+//route delete products
 router.delete("/:id",
     authorize('delete', 'products'),
     productController.deleteProductById
 );
 
-//route add provider
+//route add products
 router.post("/",
     authorize('create', 'products'),
     productController.addProduct
