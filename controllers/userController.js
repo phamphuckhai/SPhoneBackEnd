@@ -148,9 +148,12 @@ module.exports.deleteUserById = function (req, res) {
 module.exports.updateUserById = function (req, res) {
     let id = req.params.id;
     let newUsr = req.body;
+    const {name} = req.body;
     getUser({id}).then((user) => {
         if(!user)
-            return res.sendStatus(404).json("don't have user");
+            return res.status(404).json({msg:"don't have user"});
+        else if(user.name == name)
+            return res.status(404).json({msg:"U can't change username"});
         user.update(newUsr).then(newUser =>
             res.json(newUser))
         }
