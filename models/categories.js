@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     description: DataTypes.STRING
   }, {
-    
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_general_ci'
   });
   categories.associate = function(models) {
     // associations can be defined here

@@ -31,8 +31,8 @@ passport.use(strategy);
 passport.initialize();
 
 //create user
-const createUser = async ({ name, password, role }) => {
-    return await User.create({ name, password, role });
+const createUser = async ({ name, password, role, fullname, phone, address, email }) => {
+    return await User.create({ name, password, role, fullname, phone, address, email});
 };
 
 const searchUser = async (condition) => {
@@ -83,7 +83,7 @@ module.exports.register = async function (req, res, next) {
         return res.status(422).json({ errors: errors.array() });
     }
     console.log('req', req.body);
-    let { name, password, role } = req.body;
+    let { name, password, role, fullname, phone, address, email } = req.body;
     if (name && password) {
         let user = await getUser({ name });
         if (!user) {
@@ -91,7 +91,7 @@ module.exports.register = async function (req, res, next) {
                 // Store hash in database
                 console.log(hash);
                 password = hash;
-                createUser({ name, password, role }).then((users) =>
+                createUser({ name, password, role, fullname, phone, address, email }).then((users) =>
                     res.json({ users, msg: "account created successfully " })
                 );
             });
