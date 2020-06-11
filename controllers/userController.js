@@ -30,8 +30,8 @@ passport.use(strategy);
 passport.initialize();
 
 //create user
-const createUser = async ({name, password}) => {
-    return await User.create({name, password});
+const createUser = async ({name, password, role}) => {
+    return await User.create({name, password, role});
 };
 
 const searchUser = async (condition) => {
@@ -82,11 +82,11 @@ module.exports.register = async function (req, res, next) {
         return res.status(422).json({errors: errors.array()});
     }
     console.log('req', req.body);
-    const {name, password} = req.body;
+    const {name, password, role} = req.body;
     if (name && password) {
         let user = await getUser({name});
         if (!user) {
-            createUser({name, password}).then((users) =>
+            createUser({name, password, role}).then((users) =>
             res.json({users, msg: "account created successfully "})
         );
         }
