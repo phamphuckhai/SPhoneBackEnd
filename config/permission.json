@@ -22,6 +22,14 @@
           "*"
         ]
       }
+      ,
+      {
+        "resource": "users",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
 
     ]
   }

@@ -1,4 +1,6 @@
 import {check} from "express-validator";
+import {authorize} from "../utils/permission";
+
 
 const {Router} = require("express");
 const router = Router();
