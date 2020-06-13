@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             as: 'product'
         })
 
-        products.belongsTo(models.manufacture, {
+        products.belongsTo(models.manufactures, {
             as: 'manufacture'
         })
 

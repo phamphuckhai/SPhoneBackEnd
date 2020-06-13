@@ -11,10 +11,10 @@ const createCustomer = async (customer) => {
 const searchCustomer = async (condition) => {
     let Option = {};
     Object.keys(condition).forEach((val, index) => {
-        if (typeof condition[val] == 'string') {
+        if (isNaN(condition[val])) {
             Option[val] = {[Sequelize.Op.like]: `%${condition[val]}%`};
         } else {
-            Option[val] = condition[val];
+            Option[val] = parseInt(condition[val],10);
         }
     });
     return await Customer.findAll({
