@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
             as: 'manufacture'
         })
 
-        products.belongsToMany(models.orderDetails, {through: 'products_orderDetail'})
+        products.belongsToMany(models.orders, {through: 'orderDetails'})
     };
     return products;
 };

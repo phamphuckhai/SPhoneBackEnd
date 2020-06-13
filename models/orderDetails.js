@@ -1,15 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const orderDetails = sequelize.define('orderDetails', {
-    amount: DataTypes.INTEGER
+    unitPrice: DataTypes.INTEGER,
   }, {
-    
   });
   orderDetails.associate = function(models) {
-    // associations can be defined here
-    orderDetails.belongsTo(models.orders, {
-      as: 'order'
-  })
+    // associations can be defined her
   };
   return orderDetails;
 };

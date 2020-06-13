@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
   });
   productSpecs.associate = function(models) {
     // associations can be defined here
-    // productSpecs.belongsTo(models.products, {
-    //     as: 'product'
-    // })
+    productSpecs.belongsTo(models.products, {
+        as: 'product'
+    })
   };
   return productSpecs;
 };

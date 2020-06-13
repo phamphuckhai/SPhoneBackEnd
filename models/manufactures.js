@@ -2,8 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const manufactures = sequelize.define('manufactures', {
     name: DataTypes.STRING,
-    country: DataTypes.STRING,
-    amount: DataTypes.INTEGER
+    country: DataTypes.STRING
   }, {
     
   });
