@@ -5,14 +5,12 @@ module.exports = {
     return queryInterface.bulkInsert('manufactures', [{
       name: 'SamSUng',
       country: 'Han QUoc',
-      amount: '3000000',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       name: 'Apple',
       country: 'USA',
-      amount: '25000000',
       createdAt: new Date(),
       updatedAt: new Date(),
     }], {
