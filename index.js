@@ -1,4 +1,5 @@
 import {customerRouter} from "./routers/customerRouter";
+import orderDetails from "./models/orderDetails";
 
 const express = require("express");
 const app = express();
@@ -12,6 +13,8 @@ const authenticationRouter = require("./routers/authenticationRouter");
 const userRouter = require("./routers/userRouter")
 const providerRouter = require("./routers/providerRouter");
 const productRoter = require("./routers/productRouter");
+const orderRouter = require("./routers/orderRouter");
+const orderDetailRouter = require("./routers/orderDetailRouter");
 const {permissionRouter} = require('./routers/permissionRouter');
 
 const {checkPassport} = require('./controllers/userController');
@@ -29,6 +32,8 @@ app.use('/users', checkPassport, userRouter);
 app.use('/providers', checkPassport, providerRouter);
 app.use('/customers', checkPassport, customerRouter);
 app.use('/products', checkPassport, productRoter);
+app.use('/orders', checkPassport, orderRouter);
+app.use('/orderDetails', checkPassport, orderDetailRouter);
 
 app.get("/", function (req, res) {
     res.json({message: "Express is up!"});

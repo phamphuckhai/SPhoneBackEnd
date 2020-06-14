@@ -3,8 +3,8 @@ const provider = require("../models").providers;
 const {Sequelize} = require("../models");
 
 //create provider
-const createProvider = async ({name, address, phone}) => {
-    return await provider.create({name, address, phone});
+const createProvider = async ({name, address, phone, website, email}) => {
+    return await provider.create({name, address, phone, website, email});
 };
 
 //search Provider
@@ -37,8 +37,8 @@ const deleteProvider = async (condition) => {
 };
 
 module.exports.addProvider = function (req, res, next) {
-    const {name, address, phone} = req.body;
-    createProvider({name, address, phone}).then((providers) =>
+    const {name, address, phone, website, email} = req.body;
+    createProvider({name, address, phone, website, email}).then((providers) =>
         res.json({providers, msg: "provider created successfully "})
     );
 }

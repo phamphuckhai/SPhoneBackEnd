@@ -8,9 +8,19 @@ module.exports = {
           'unitPrice', //field name
           {
               type: Sequelize.INTEGER,
-              allowNull: false,
+              allowNull: true,
           },
+          
       ),
+      queryInterface.addColumn(
+        'orderDetails', //table name
+        'id', //field name
+        {
+          type: Sequelize.INTEGER,
+          allowNull: true,        
+        },
+        
+    ),
   ]);
   },
 

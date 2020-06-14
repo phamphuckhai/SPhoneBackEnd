@@ -30,6 +30,22 @@
           "*"
         ]
       }
+      ,
+      {
+        "resource": "orders",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
+      ,
+      {
+        "resource": "orderDetails",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
 
     ]
   }

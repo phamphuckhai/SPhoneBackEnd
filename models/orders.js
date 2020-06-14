@@ -1,6 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const orders = sequelize.define('orders', {
+    status: DataTypes.STRING,
+    amount: DataTypes.INTEGER
   }, {
     
   });
@@ -8,15 +10,15 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     
     orders.belongsTo(models.Customer, {
-      foreignKey: 'customer'
+      as: 'Customer'
     })
 
-    orders.hasOne(models.providers, {
-      as: 'provider'
+    orders.belongsTo(models.providers, {
+      foreign: 'provider'
     })
 
     orders.belongsTo(models.orderTypes, {
-      foreignKey: 'type'
+      as: 'orderType'
     })
 
   };
