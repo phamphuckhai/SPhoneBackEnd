@@ -2,12 +2,12 @@
 const product = require("../models").products;
 const {Sequelize} = require("../models");
 
-//create provider
+//create Product
 const createProduct = async ({name, codeName, description, madeIn, amount, categoryId, manufactureId}) => {
     return await product.create({name, codeName, description, madeIn, amount, categoryId, manufactureId});
 };
 
-//search Provider
+//search Product
 const searchProduct = async (condition) => {
     let Option = {};
     Object.keys(condition).forEach((val, index) => {
@@ -22,14 +22,14 @@ const searchProduct = async (condition) => {
     });
 };
 
-//Get Provider
+//Get Product
 const getProduct = async (condition) => {
     return await product.findOne({
         where: condition,
     });
 };
 
-//delete provider
+//delete Product
 const deleteProduct = async (condition) => {
     return await product.destroy({
         where: condition,
@@ -69,7 +69,7 @@ module.exports.deleteProductById = function (req, res) {
     deleteProduct({id}).then((product) => res.json("delete product successfully!"))
 }
 
-//Search provider
+//Search Product
 module.exports.search = async function (req, res) {
     const cond = req.query;
     console.log('query', cond);

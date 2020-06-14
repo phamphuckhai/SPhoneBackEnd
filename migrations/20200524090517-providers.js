@@ -17,6 +17,12 @@ module.exports = {
             },
             phone: {
                 type: Sequelize.INTEGER
+            },
+            website: {
+                type: Sequelize.STRING
+            },
+            email: {
+                type: Sequelize.STRING
             }
         });
     },
