@@ -1,16 +1,18 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const manufactures = sequelize.define('manufactures', {
-    name: DataTypes.STRING,
-    country: DataTypes.STRING
-  }, {
-    
-  });
-  manufactures.associate = function(models) {
+  const manufactures = sequelize.define(
+    "manufactures",
+    {
+      name: DataTypes.STRING,
+      country: DataTypes.STRING,
+    },
+    {}
+  );
+  manufactures.associate = function (models) {
     // associations can be defined here
     manufactures.hasMany(models.products, {
-        as: 'manufactures'
-    })
+      as: "manufactures",
+    });
   };
   return manufactures;
 };

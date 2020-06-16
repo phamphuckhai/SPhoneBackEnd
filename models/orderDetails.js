@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   orderDetails.associate = function(models) {
     // associations can be defined her
+    orderDetails.belongsTo(models.products);
+    orderDetails.belongsTo(models.orders);
   };
   return orderDetails;
 };
