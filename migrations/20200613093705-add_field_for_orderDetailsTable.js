@@ -1,33 +1,46 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.addColumn(
-          'orderDetails', //table name
-          'unitPrice', //field name
-          {
-              type: Sequelize.INTEGER,
-              allowNull: true,
-          },
-          
-      ),
-      queryInterface.addColumn(
-        'orderDetails', //table name
-        'id', //field name
+        "orderDetails", //table name
+        "unitPrice", //field name
         {
           type: Sequelize.INTEGER,
-          allowNull: true,        
-        },
-        
-    ),
-  ]);
+          allowNull: true,
+        }
+      ),
+      queryInterface.addColumn(
+        "orderDetails", //table name
+        "id", //field name
+        {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+        }
+      ),
+      queryInterface.addColumn(
+        "orderDetails", //table name
+        "quantity", //field name
+        {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+        }
+      ),
+      queryInterface.addColumn(
+        "orderDetails", //table name
+        "interest", //field name
+        {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+        }
+      ),
+    ]);
   },
 
   down: (queryInterface, Sequelize) => {
-
     return Promise.all([
-      queryInterface.removeColumn('orderDetails', 'unitPrice')
-  ]);
-  }
+      queryInterface.removeColumn("orderDetails", "unitPrice"),
+    ]);
+  },
 };

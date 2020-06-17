@@ -1,7 +1,7 @@
-import {check} from "express-validator";
-import {authorize} from "../utils/permission";
+import { check } from "express-validator";
+import { authorize } from "../utils/permission";
 
-const {Router} = require("express");
+const { Router } = require("express");
 const router = Router();
 const userController = require("../controllers/userController");
 
@@ -9,11 +9,10 @@ const userController = require("../controllers/userController");
 router.post("/register", userController.register);
 
 //login route
-router.post("/login", [
-    check('name').isString(),
-    check('password').isString()
-    ], 
-    userController.login);
-
+router.post(
+  "/login",
+  [check("name").isString(), check("password").isString()],
+  userController.login
+);
 
 module.exports = router;

@@ -1,10 +1,10 @@
-const {Router} = require('express');
+const { Router } = require("express");
 const router = Router();
-const {getPermissions} = require('../utils/permission');
+const { getPermissions } = require("../utils/permission");
 
-router.get('/', (req, res) => {
-    let permissions = getPermissions();
-    res.send(permissions);
+router.get("/", (req, res) => {
+  let permissions = getPermissions();
+  res.send(permissions);
 });
 
 module.exports.permissionRouter = router;

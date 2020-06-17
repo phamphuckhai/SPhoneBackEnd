@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.STRING,
       madeIn: DataTypes.STRING,
       amount: DataTypes.INTEGER,
+      cost: DataTypes.INTEGER,
+      price: DataTypes.INTEGER,
     },
     {}
   );

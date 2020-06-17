@@ -1,32 +1,33 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const orders = sequelize.define('orders', {
-    status: DataTypes.STRING,
-    amount: DataTypes.INTEGER
-  }, {
-    
-  });
-  orders.associate = function(models) {
+  const orders = sequelize.define(
+    "orders",
+    {
+      status: DataTypes.STRING,
+      amount: DataTypes.INTEGER,
+    },
+    {}
+  );
+  orders.associate = function (models) {
     // associations can be defined here
-    
+
     orders.belongsTo(models.Customer, {
-      as: 'Customer'
-    })
+      as: "Customer",
+    });
 
     orders.belongsTo(models.providers, {
-      foreign: 'provider'
-    })
+      foreign: "provider",
+    });
 
     orders.belongsTo(models.orderTypes, {
-      as: 'orderType'
-    })
+      as: "orderType",
+    });
 
-    orders.belongsToMany(models.products, {through: 'orderDetails'})
+    orders.belongsToMany(models.products, { through: "orderDetails" });
 
     orders.hasMany(models.orderDetails, {
-      as: 'orderDetail'
-    })
-
+      as: "orderDetail",
+    });
   };
   return orders;
 };
