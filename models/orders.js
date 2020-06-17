@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     orders.belongsToMany(models.products, {through: 'orderDetails'})
 
     orders.hasMany(models.orderDetails, {
-      as: 'order'
+      as: 'orderDetail'
     })
 
   };

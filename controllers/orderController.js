@@ -1,6 +1,7 @@
 //declare model
 const order = require("../models").orders;
 const { Sequelize } = require("../models");
+const {orderDetails} = require("../models");
 
 //create Order
 const createOrder = async ({ providerId, CustomerId, orderTypeId, status }) => {
@@ -26,6 +27,13 @@ const searchOrder = async (condition) => {
 const getOrder = async (condition) => {
   return await order.findOne({
     where: condition,
+    include: {
+      model: orderDetails,
+      as: 'orderDetail',
+      where: {
+        orderId: condition.id,
+      }
+    }
   });
 };
 
