@@ -3,8 +3,8 @@ const orderDetail = require("../models").orderDetails;
 const { Sequelize } = require("../models");
 
 //create OrderDetail
-const createOrderDetail = async ({ productId, orderId, unitPrice }) => {
-  return await orderDetail.create({ productId, orderId, unitPrice });
+export const createOrderDetail = async ({ productId, orderId, unitPrice, quantity, interest }) => {
+  return await orderDetail.create({ productId, orderId, unitPrice, quantity, interest });
 };
 
 //search OrderDetail
@@ -37,8 +37,8 @@ const deleteOrderDetail = async (condition) => {
 };
 
 module.exports.addOrderDetail = function (req, res, next) {
-  const { productId, orderId, unitPrice } = req.body;
-  createOrderDetail({ productId, orderId, unitPrice }).then((orderDetails) =>
+  const { productId, orderId, unitPrice, quantity, interest } = req.body;
+  createOrderDetail({ productId, orderId, unitPrice, quantity, interest }).then((orderDetails) =>
     res.json({ orderDetails, msg: "orderDetail created successfully " })
   );
 };
@@ -86,4 +86,9 @@ module.exports.search = async function (req, res) {
   const orderDetails = await searchOrderDetail(cond);
   if (!orderDetails) res.sendStatus(404);
   else res.send(orderDetails);
+};
+
+//add array orderDetail in order
+module.exports.addArrOrderDetail = function (req, res, next) {
+  
 };

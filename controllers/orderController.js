@@ -1,11 +1,23 @@
 //declare model
 const order = require("../models").orders;
 const { Sequelize } = require("../models");
-const { orderDetails } = require("../models");
-
+const { orderDetails, Customer, orderTypes } = require("../models");
+import { createOrderDetail } from "./orderDetailController";
 //create Order
-const createOrder = async ({ providerId, CustomerId, orderTypeId, status }) => {
-  return await order.create({ providerId, CustomerId, orderTypeId, status });
+const createOrder = async ({
+  providerId,
+  CustomerId,
+  orderTypeId,
+  status,
+  amount,
+}) => {
+  return await order.create({
+    providerId,
+    CustomerId,
+    orderTypeId,
+    status,
+    amount,
+  });
 };
 
 //search Order
@@ -36,6 +48,16 @@ const getOrder = async (condition) => {
         },
         required: false,
       },
+      {
+        model: Customer,
+        as: "Customer",
+        required: true,
+      },
+      {
+        model: orderTypes,
+        as: "orderType",
+        required: true,
+      },
     ],
   });
 };
@@ -46,12 +68,18 @@ const deleteOrder = async (condition) => {
     where: condition,
   });
 };
+//
+module.exports.addOrder = async function (req, res, next) {
+  const { providerId, CustomerId, orderTypeId, status, amount } = req.body;
+  const object = req.body.orderDetail;
+  const orderId = req.body.id;
+  createOrder({ providerId, CustomerId, orderTypeId, status, amount });
 
-module.exports.addOrder = function (req, res, next) {
-  const { providerId, CustomerId, orderTypeId, status } = req.body;
-  createOrder({ providerId, CustomerId, orderTypeId, status }).then((orders) =>
-    res.json({ orders, msg: "order created successfully " })
-  );
+  object.forEach((index) => {
+    const { productId, unitPrice, quantity, interest } = index;
+    createOrderDetail({ productId, orderId, unitPrice, quantity, interest });
+  });
+  return res.json(req.body);
 };
 
 module.exports.getOrderById = function (req, res) {
