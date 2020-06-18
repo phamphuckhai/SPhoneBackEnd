@@ -27,13 +27,16 @@ const searchOrder = async (condition) => {
 const getOrder = async (condition) => {
   return await order.findOne({
     where: condition,
-    include: {
-      model: orderDetails,
-      as: "orderDetail",
-      where: {
-        orderId: condition.id,
+    include: [
+      {
+        model: orderDetails,
+        as: "orderDetail",
+        where: {
+          orderId: condition.id,
+        },
+        required: false,
       },
-    },
+    ],
   });
 };
 
