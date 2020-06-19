@@ -1,38 +1,16 @@
-import {categories, manufactures} from "../models";
-//declare model
-const Product = require("../models").products;
-const {Sequelize} = require("../models");
-const OrderDetail = require("../models").orderDetails;
+import {
+    categories,
+    manufactures,
+    orderDetails as OrderDetail,
+    orders as Order,
+    products as Product,
+    sequelize,
+    Sequelize
+} from "../models";
 
-//create Product
-
-const createProduct = async ({
-                                 name,
-                                 codeName,
-                                 description,
-                                 madeIn,
-                                 // amount,
-                                 categoryId,
-                                 manufactureId,
-                             }) => {
-    const prdt = await Product.create({
-        name,
-        codeName,
-        description,
-        madeIn,
-        // amount,
-        categoryId,
-        manufactureId,
-    });
-    // const res = await product.findOne({
-    //     where: {id: prdt.id},
-    //     include: [
-    //         {model: categories, required: true, as: 'category'},
-    //         {model: manufactures, required: true, as: 'manufacture'},
-    //     ]
-    // })
-    const res = await getProduct({id: prdt.id});
-    return res;
+const createProduct = async ({name, codeName, description, madeIn, categoryId, manufactureId}) => {
+    const dbRes = await Product.create({name, codeName, description, madeIn, categoryId, manufactureId,});
+    return await getProduct({id: dbRes.id});
 };
 
 //search Product
@@ -76,35 +54,31 @@ const deleteProduct = async (condition) => {
 };
 
 module.exports.addProduct = function (req, res, next) {
-    const {
-        name,
-        codeName,
-        description,
-        madeIn,
-        // amount,
-        categoryId,
-        manufactureId,
-    } = req.body;
+    const {name, codeName, description, madeIn, categoryId, manufactureId,} = req.body;
     createProduct({
-        name,
-        codeName,
-        description,
-        madeIn,
-        // amount,
-        categoryId,
-        manufactureId,
+        name, codeName, description, madeIn, categoryId, manufactureId,
     }).then((products) => res.json(products));
 };
 
 module.exports.getProductById = async function (req, res) {
     let id = req.params.id;
-    const product = await getProduct({id});
+    const product = await Product.findOne({
+        where: {id},
+        include: [{
+            model: OrderDetail,
+            include: [
+                {model: Order, right: true, where: {orderTypeId: 1}, attributes: []}
+            ],
+            attributes: []
+        }],
+        attributes: [
+            [sequelize.fn('SUM', sequelize.col('orderDetails.quantity')), 'count'],
+            "name", "codeName", "description", "madeIn", "price"
+        ],
+        group: ['products.id']
+    });
     if (!product) return res.sendStatus(404);
-    //Count product
-
-
-
-    res.send(product);
+    res.send(product.get());
 
 };
 

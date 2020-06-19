@@ -63,8 +63,27 @@ const getOrder = async (condition) => {
 };
 
 
-function createOrder(req) {
+async function createOrder(data) {
+    const {CustomerId, orderDetail: details} = data;
+    const orderTypeId = 2;
+    let amount = 0;
+    details.forEach(it => {
+        amount += it.unitPrice * it.quantity;
+    });
+    const order = await Order.create(
+        {
+            CustomerId,
+            orderTypeId,
+            amount
+        }
+    );
 
+    await FOR_EACH(details, async (item) => {
+        //Create Detail
+        const detail = await createOrderDetail({...item, orderId: order.id});
+    });
+
+    return await getOrder({id: order.id});
 }
 
 async function createImport(data) {
@@ -96,33 +115,19 @@ async function createImport(data) {
 
 export const addOrder = async function (req, res, next) {
     const {orderTypeId} = req.body;
-    // const details = req.body.orderDetail;
-    // const orderId = req.body.id;
-
     try {
         const result = await sequelize.transaction(async (t) => {
             switch (orderTypeId) {
                 case 1:
                     return await createImport(req.body);
                     break;
+                case 2:
+                    return await createOrder(req.body);
+                    break;
                 default:
                     res.sendStatus(400);
                     break;
-
             }
-            // const item = await Order.create(
-            //     {
-            //         providerId,
-            //         CustomerId,
-            //         orderTypeId,
-            //         status,
-            //         amount,
-            //     }
-            // );
-            // await Promise.all(details.map((v) => createOrderDetail(v)));
-            // return await getOrder({id: item.id});
-            // // const res = await getProduct({ id: prdt.id });
-            // // return res;
         });
         res.send(result);
     } catch (error) {
