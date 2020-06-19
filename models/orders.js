@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     "orders",
     {
       status: DataTypes.STRING,
-      amount: DataTypes.INTEGER,
+      amount: DataTypes.BIGINT,
     },
     {}
   );
