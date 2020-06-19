@@ -1,8 +1,10 @@
 //declare model
-const order = require("../models").orders;
+import {FOR_EACH} from "../utils/Object";
+import {createOrderDetail} from "./orderDetailController";
+
+const Order = require("../models").orders;
 const {Sequelize, sequelize} = require("../models");
 const {orderDetails, Customer, orderTypes} = require("../models");
-import {createOrderDetail} from "./orderDetailController";
 //create Order
 // const createOrder = async ({
 //   providerId,
@@ -29,13 +31,13 @@ const searchOrder = async (condition) => {
             Option[val] = parseInt(condition[val], 10);
         }
     });
-    return order.findAll({
+    return Order.findAll({
         where: Option,
     });
 };
 
 const getOrder = async (condition) => {
-    return order.findOne({
+    return Order.findOne({
         where: condition,
         include: [
             {
@@ -61,26 +63,66 @@ const getOrder = async (condition) => {
 };
 
 
-module.exports.addOrder = async function (req, res, next) {
-    const {providerId, CustomerId, orderTypeId, status, amount} = req.body;
-    const details = req.body.orderDetail;
-    const orderId = req.body.id;
+function createOrder(req) {
+
+}
+
+async function createImport(data) {
+    // const {CustomerId, orderTypeId, providerId, orderDetail} = data;
+    // const item = await order.create({providerId, CustomerId, orderTypeId});
+
+    const {providerId, orderDetail: details} = data;
+    const orderTypeId = 1;
+    let amount = 0;
+    details.forEach(it => {
+        amount += it.unitPrice * it.quantity;
+    });
+    const order = await Order.create(
+        {
+            providerId,
+            orderTypeId,
+            amount
+        }
+    );
+    await FOR_EACH(details, async (item) => {
+        //Create Detail
+        const detail = await createOrderDetail({...item, orderId: order.id});
+        //Update MAC
+        // const product = await detail.getproducts()
+        // (count()*product.price + quantity*price )/(count() + quantity)
+    });
+    return await getOrder({id: order.get('id')});
+}
+
+export const addOrder = async function (req, res, next) {
+    const {orderTypeId} = req.body;
+    // const details = req.body.orderDetail;
+    // const orderId = req.body.id;
 
     try {
         const result = await sequelize.transaction(async (t) => {
-            const item = await order.create(
-                {
-                    providerId,
-                    CustomerId,
-                    orderTypeId,
-                    status,
-                    amount,
-                }
-            );
-            await Promise.all(details.map((v) => createOrderDetail(v)));
-            return await getOrder({id: item.id});
-            // const res = await getProduct({ id: prdt.id });
-            // return res;
+            switch (orderTypeId) {
+                case 1:
+                    return await createImport(req.body);
+                    break;
+                default:
+                    res.sendStatus(400);
+                    break;
+
+            }
+            // const item = await Order.create(
+            //     {
+            //         providerId,
+            //         CustomerId,
+            //         orderTypeId,
+            //         status,
+            //         amount,
+            //     }
+            // );
+            // await Promise.all(details.map((v) => createOrderDetail(v)));
+            // return await getOrder({id: item.id});
+            // // const res = await getProduct({ id: prdt.id });
+            // // return res;
         });
         res.send(result);
     } catch (error) {
@@ -89,7 +131,7 @@ module.exports.addOrder = async function (req, res, next) {
     }
 };
 
-module.exports.getOrderById = function (req, res) {
+export const getOrderById = function (req, res) {
     let id = req.params.id;
     getOrder({id}).then((order) => {
         if (!order) return res.sendStatus(404);
@@ -99,7 +141,7 @@ module.exports.getOrderById = function (req, res) {
 
 
 //Search Order
-module.exports.search = async function (req, res) {
+export const search = async function (req, res) {
     const cond = req.query;
     console.log("query", cond);
     const orders = await searchOrder(cond);
