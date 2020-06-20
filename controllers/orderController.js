@@ -1,130 +1,223 @@
-//declare model
-const order = require("../models").orders;
-const { Sequelize, sequelize } = require("../models");
-const { orderDetails, Customer, orderTypes } = require("../models");
-import { createOrderDetail } from "./orderDetailController";
-import { or } from "sequelize";
-//create Order
-const createOrder = async ({
-  providerId,
-  CustomerId,
-  orderTypeId,
-  status,
-  amount,
-}) => {
-  return await order.create({
-    providerId,
-    CustomerId,
-    orderTypeId,
-    status,
-    amount,
-  });
-};
+import * as _ from 'lodash';
+import {products as Product, providers as Provider} from '../models';
+import {FOR_EACH} from "../utils/Object";
+import {createOrderDetail} from "./orderDetailController";
+import {getProduct} from "./productController";
 
-//search Order
+const Order = require("../models").orders;
+const {Sequelize, sequelize} = require("../models");
+const {orderDetails, Customer, orderTypes} = require("../models");
+
 const searchOrder = async (condition) => {
-  let Option = {};
-  Object.keys(condition).forEach((val, index) => {
-    if (isNaN(condition[val])) {
-      Option[val] = { [Sequelize.Op.like]: `%${condition[val]}%` };
-    } else {
-      Option[val] = parseInt(condition[val], 10);
-    }
-  });
-  return await order.findAll({
-    where: Option,
-  });
-};
-
-//Get Order
-const getOrder = async (condition) => {
-  return await order.findOne({
-    where: condition,
-    include: [
-      {
-        model: orderDetails,
-        as: "orderDetail",
-        where: {
-          orderId: condition.id,
-        },
-        required: false,
-      },
-      {
-        model: Customer,
-        as: "Customer",
-        required: true,
-      },
-      {
-        model: orderTypes,
-        as: "orderType",
-        required: true,
-      },
-    ],
-  });
-};
-
-//delete Order
-const deleteOrder = async (condition) => {
-  return await order.destroy({
-    where: condition,
-  });
-};
-//
-module.exports.addOrder = async function (req, res, next) {
-  const { providerId, CustomerId, orderTypeId, status, amount } = req.body;
-  const details = req.body.orderDetail;
-  const orderId = req.body.id;
-
-  try {
-    const result = await sequelize.transaction(async (t) => {
-      const item = await order.create(
-        {
-          providerId,
-          CustomerId,
-          orderTypeId,
-          status,
-          amount,
+    let Option = {};
+    Object.keys(condition).forEach((val, index) => {
+        if (isNaN(condition[val])) {
+            Option[val] = {[Sequelize.Op.like]: `%${condition[val]}%`};
+        } else {
+            Option[val] = parseInt(condition[val], 10);
         }
-        // { transaction: t }
-      );
-      await Promise.all(details.map((v) => createOrderDetail(v)));
-      return await getOrder({ id: item.id });
-      // const res = await getProduct({ id: prdt.id });
-      // return res;
     });
-    res.send(result);
-  } catch (error) {
-    console.log(error);
-    res.sendStatus(400);
-  }
+    return Order.findAll({
+        where: Option,
+    });
 };
 
-module.exports.getOrderById = function (req, res) {
-  let id = req.params.id;
-  getOrder({ id }).then((order) => {
-    if (!order) return res.sendStatus(404);
-    else return res.send(order);
-  });
+const getOrder = async (condition) => {
+    const result = await Order.findOne({
+        where: condition,
+        include: [
+            {
+                model: orderDetails,
+                as: "orderDetail",
+                include: [
+                    {model: Product}
+                ],
+                // attributes: {
+                //     exclude: ['interest']
+                //
+                // }
+            },
+            {
+                model: Customer,
+                as: "Customer",
+            },
+            {
+                model: Provider,
+                as: 'provider'
+            },
+            {
+                model: orderTypes,
+                as: "orderType",
+            },
+        ],
+        attributes: {
+            exclude: [
+                'updatedAt'
+            ]
+        }
+    });
+    return _.omitBy(result.get({plain: true}), _.isNull);
 };
 
-module.exports.updateOrderById = function (req, res) {
-  let id = req.params.id;
-  let neword = req.body;
-  getOrder({ id }).then((order) => {
-    if (!order) return res.sendStatus(404);
-    order.update(neword).then((newOrder) => res.json(newOrder));
-  });
+function getTotal(details) {
+    let amount = 0;
+    details.forEach(it => {
+        amount += it.unitPrice * it.quantity;
+    });
+    return amount;
+}
+
+async function createOrder(data) {
+    //Create Order
+    //For each order detail
+    //Create detail
+    //Update availabe
+    //Update COGS
+
+    const {CustomerId, orderDetail: details} = data;
+    const orderTypeId = 2;
+
+    const amount = getTotal(details);
+
+    const order = await Order.create(
+        {
+            CustomerId,
+            orderTypeId,
+            amount
+        }
+    );
+    await FOR_EACH(details, async (item) => {
+        //Get params
+        const {productId, quantity, unitPrice} = item;
+
+        //Get product
+        const product = await getProduct({id: productId});
+
+
+        //Calculate interest
+        const interest = (product.price - product.COGS) * quantity;
+
+        //Create Details
+        const detail = await createOrderDetail({
+            productId: product.id,
+            quantity,
+            interest,
+            orderId: order.id,
+            unitPrice
+        });
+
+        //update product price if it's note exist
+        if (product.price === null)
+            product.price = unitPrice;
+
+        const available = product.available !== null ? product.available : 0;
+
+        //Update available
+        product.available = available - quantity;
+
+        //Save updated product
+        await product.save();
+
+    });
+    const transactionRes = await getOrder({id: order.id});
+    return transactionRes;
+}
+
+async function createImport(data) {
+    //Create Order
+    //For each order detail
+    //Create detail
+    //Update availabe
+    //Update COGS
+
+    const {providerId, orderDetail: details} = data;
+    const orderTypeId = 1;
+    let amount = 0;
+
+    //Calculate order value
+    details.forEach(it => {
+        amount += it.unitPrice * it.quantity;
+    });
+
+    const order = await Order.create(
+        {
+            providerId,
+            orderTypeId,
+            amount
+        }
+    );
+    await FOR_EACH(details, async (item) => {
+        //Get params
+        const {productId, quantity, unitPrice} = item;
+
+        //Get product
+        const product = await getProduct({id: productId});
+
+        //Create Details
+        const detail = await createOrderDetail({
+            productId: product.id,
+            quantity,
+            interest: 0,
+            orderId: order.id,
+            unitPrice
+        });
+
+        //update product price if it's note exist
+        if (product.price === null)
+            product.price = unitPrice;
+
+        //Update COGS
+        const available = product.available ? product.available : 0;
+        const COGS = (product.COGS * available + quantity * unitPrice) / (available + quantity);
+        product.COGS = COGS;
+
+        //Update available
+        product.available = available + quantity;
+
+        //Save updated product
+        await product.save();
+
+    });
+    const transactionRes = await getOrder({id: order.id});
+    return transactionRes;
+}
+
+export const addOrder = async function (req, res, next) {
+    const {orderTypeId} = req.body;
+    try {
+        const result = await sequelize.transaction(async (t) => {
+            switch (orderTypeId) {
+                case 1:
+                    return await createImport(req.body);
+                    break;
+                case 2:
+                    return await createOrder(req.body);
+                    break;
+                default:
+                    res.sendStatus(400);
+                    break;
+            }
+        });
+        res.send(result);
+    } catch (error) {
+        // console.log(error);
+        res.sendStatus(400);
+    }
 };
-module.exports.deleteOrderById = function (req, res) {
-  let id = req.params.id;
-  deleteOrder({ id }).then((order) => res.json("delete order successfully!"));
+
+export const getOrderById = function (req, res) {
+    let id = req.params.id;
+    getOrder({id}).then((order) => {
+        if (!order) return res.sendStatus(404);
+        else return res.send(order);
+    });
 };
+
 
 //Search Order
-module.exports.search = async function (req, res) {
-  const cond = req.query;
-  console.log("query", cond);
-  const orders = await searchOrder(cond);
-  if (!orders) res.sendStatus(404);
-  else res.send(orders);
+export const search = async function (req, res) {
+    const cond = req.query;
+    const orders = await searchOrder(cond);
+    if (!orders) res.sendStatus(404);
+    else res.send(orders);
 };
