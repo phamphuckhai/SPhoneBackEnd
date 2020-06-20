@@ -19,6 +19,16 @@ const searchOrder = async (condition) => {
     });
     return Order.findAll({
         where: Option,
+        include: [
+            {
+                model: Customer,
+                as: "Customer",
+            },
+            {
+                model: Provider,
+                as: 'provider'
+            },
+        ]
     });
 };
 
