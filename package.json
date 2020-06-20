@@ -20,10 +20,12 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "continuation-local-storage": "^3.2.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.5.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
     "mssql": "^6.2.0",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.3",

@@ -34,7 +34,7 @@ const searchProduct = async (condition) => {
 };
 
 //Get Product
-const getProduct = async (condition) => {
+export const getProduct = async (condition) => {
     return Product.findOne({
         where: condition,
         include: [
@@ -79,6 +79,8 @@ export async function getAvailableQuantity(productId) {
 
 module.exports.getProductById = async function (req, res) {
     let id = req.params.id;
+
+
     // const product = await Product.findOne({
     //     where: {id},
     //     include: [{
@@ -97,7 +99,6 @@ module.exports.getProductById = async function (req, res) {
     // if (!product) return res.sendStatus(404);
     // res.send(product.get());
 
-    const quantity = await getAvailableQuantity(id);
     res.send(quantity);
 };
 

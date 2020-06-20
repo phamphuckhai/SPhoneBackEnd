@@ -3,11 +3,10 @@ module.exports = (sequelize, DataTypes) => {
     const orders = sequelize.define(
         "orders",
         {
-            status: DataTypes.STRING,
             amount: {
                 type: DataTypes.BIGINT,
                 validate: {
-                    min: 1000
+                    min: 0
                 }
             },
         },

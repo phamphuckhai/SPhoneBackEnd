@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             price: {
                 type: DataTypes.BIGINT,
                 validate: {
-                    min: 1000
+                    min: 0
                 }
             },
             available: {

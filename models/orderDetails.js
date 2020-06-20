@@ -9,11 +9,21 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: true,
             },
-            unitPrice: DataTypes.BIGINT,
-            quantity: DataTypes.INTEGER,
+            unitPrice: {
+                type: DataTypes.BIGINT,
+                validate: {
+                    min: 0
+                }
+            },
+            quantity: {
+                type: DataTypes.INTEGER,
+                validate: {
+                    min: 1
+                }
+            },
             interest: DataTypes.BIGINT,
         },
-        {}
+        {timestamps: false}
     );
     orderDetails.associate = function (models) {
         // associations can be defined her

@@ -1,26 +1,12 @@
-//declare model
+import * as _ from 'lodash';
+import {products as Product, providers as Provider} from '../models';
 import {FOR_EACH} from "../utils/Object";
 import {createOrderDetail} from "./orderDetailController";
+import {getProduct} from "./productController";
 
 const Order = require("../models").orders;
 const {Sequelize, sequelize} = require("../models");
 const {orderDetails, Customer, orderTypes} = require("../models");
-//create Order
-// const createOrder = async ({
-//   providerId,
-//   CustomerId,
-//   orderTypeId,
-//   status,
-//   amount,
-// }) => {
-//   return await order.create({
-//     providerId,
-//     CustomerId,
-//     orderTypeId,
-//     status,
-//     amount,
-//   });
-// };
 
 const searchOrder = async (condition) => {
     let Option = {};
@@ -37,29 +23,40 @@ const searchOrder = async (condition) => {
 };
 
 const getOrder = async (condition) => {
-    return Order.findOne({
+    const result = await Order.findOne({
         where: condition,
         include: [
             {
                 model: orderDetails,
                 as: "orderDetail",
-                where: {
-                    orderId: condition.id,
-                },
-                required: false,
+                include: [
+                    {model: Product}
+                ],
+                attributes: {
+                    exclude: ['interest']
+
+                }
             },
             {
                 model: Customer,
                 as: "Customer",
-                required: true,
+            },
+            {
+                model: Provider,
+                as: 'provider'
             },
             {
                 model: orderTypes,
                 as: "orderType",
-                required: true,
             },
         ],
+        attributes: {
+            exclude: [
+                'updatedAt'
+            ]
+        }
     });
+    return _.omitBy(result.get({plain: true}), _.isNull);
 };
 
 
@@ -87,15 +84,21 @@ async function createOrder(data) {
 }
 
 async function createImport(data) {
-    // const {CustomerId, orderTypeId, providerId, orderDetail} = data;
-    // const item = await order.create({providerId, CustomerId, orderTypeId});
+    //Create Order
+    //For each order detail
+    //Create detail
+    //Update availabe
+    //Update COGS
 
     const {providerId, orderDetail: details} = data;
     const orderTypeId = 1;
     let amount = 0;
+
+    //Calculate order value
     details.forEach(it => {
         amount += it.unitPrice * it.quantity;
     });
+
     const order = await Order.create(
         {
             providerId,
@@ -104,13 +107,41 @@ async function createImport(data) {
         }
     );
     await FOR_EACH(details, async (item) => {
-        //Create Detail
-        const detail = await createOrderDetail({...item, orderId: order.id});
-        //Update MAC
-        // const product = await detail.getproducts()
-        // (count()*product.price + quantity*price )/(count() + quantity)
+        //Get params
+        const {productId, quantity, unitPrice} = item;
+
+        //Get product
+        const product = await getProduct({id: productId});
+
+        //Create Details
+        const detail = await createOrderDetail({
+            productId: product.id,
+            quantity,
+            interest: 0,
+            orderId: order.id,
+            unitPrice
+        });
+
+        //update product price if it's note exist
+        if (product.price === null)
+            product.price = unitPrice;
+
+        //Update COGS
+        const available = product.available ? product.available : 0;
+        const COGS = (product.COGS * available + quantity * unitPrice) / (available + quantity);
+        product.COGS = COGS;
+
+        //Update available
+        product.available = available + quantity;
+
+        //Save updated product
+        await product.save();
+
     });
-    return await getOrder({id: order.get('id')});
+    const transactionRes = await getOrder({id: order.id});
+    console.log('transactionRes', transactionRes);
+    console.log(order.id);
+    return transactionRes;
 }
 
 export const addOrder = async function (req, res, next) {
