@@ -4,8 +4,8 @@ import {
     orderDetails as OrderDetail,
     orders as Order,
     products as Product,
-    sequelize,
-    Sequelize
+    Sequelize,
+    sequelize
 } from "../models";
 
 const createProduct = async ({name, codeName, description, madeIn, categoryId, manufactureId}) => {
@@ -60,26 +60,45 @@ module.exports.addProduct = function (req, res, next) {
     }).then((products) => res.json(products));
 };
 
+export async function getAvailableQuantity(productId) {
+    const query = await OrderDetail.findAll({
+        where: {
+            productId
+        },
+        attributes: [
+            [sequelize.fn('SUM', sequelize.col('quantity')), 'quantity'],
+        ],
+        include: [
+            {model: Order, attributes: []}
+        ],
+        group: ['order.orderTypeId']
+    });
+    return query;
+
+}
+
 module.exports.getProductById = async function (req, res) {
     let id = req.params.id;
-    const product = await Product.findOne({
-        where: {id},
-        include: [{
-            model: OrderDetail,
-            include: [
-                {model: Order, right: true, where: {orderTypeId: 1}, attributes: []}
-            ],
-            attributes: []
-        }],
-        attributes: [
-            [sequelize.fn('SUM', sequelize.col('orderDetails.quantity')), 'count'],
-            "name", "codeName", "description", "madeIn", "price"
-        ],
-        group: ['products.id']
-    });
-    if (!product) return res.sendStatus(404);
-    res.send(product.get());
+    // const product = await Product.findOne({
+    //     where: {id},
+    //     include: [{
+    //         model: OrderDetail,
+    //         include: [
+    //             {model: Order, attributes: ['orderTypeId']}
+    //         ],
+    //     }],
+    //     // attributes: [
+    //     //     [sequelize.fn('SUM', sequelize.col('orderDetails.quantity')), 'count'],
+    //     //     "name", "codeName", "description", "madeIn", "price"
+    //     // ],
+    //     // group: ['products.id']
+    // });
 
+    // if (!product) return res.sendStatus(404);
+    // res.send(product.get());
+
+    const quantity = await getAvailableQuantity(id);
+    res.send(quantity);
 };
 
 module.exports.updateProductById = function (req, res) {
