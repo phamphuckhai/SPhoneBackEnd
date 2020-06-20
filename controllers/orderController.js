@@ -32,10 +32,10 @@ const getOrder = async (condition) => {
                 include: [
                     {model: Product}
                 ],
-                attributes: {
-                    exclude: ['interest']
-
-                }
+                // attributes: {
+                //     exclude: ['interest']
+                //
+                // }
             },
             {
                 model: Customer,
@@ -59,14 +59,26 @@ const getOrder = async (condition) => {
     return _.omitBy(result.get({plain: true}), _.isNull);
 };
 
-
-async function createOrder(data) {
-    const {CustomerId, orderDetail: details} = data;
-    const orderTypeId = 2;
+function getTotal(details) {
     let amount = 0;
     details.forEach(it => {
         amount += it.unitPrice * it.quantity;
     });
+    return amount;
+}
+
+async function createOrder(data) {
+    //Create Order
+    //For each order detail
+    //Create detail
+    //Update availabe
+    //Update COGS
+
+    const {CustomerId, orderDetail: details} = data;
+    const orderTypeId = 2;
+
+    const amount = getTotal(details);
+
     const order = await Order.create(
         {
             CustomerId,
@@ -74,13 +86,41 @@ async function createOrder(data) {
             amount
         }
     );
-
     await FOR_EACH(details, async (item) => {
-        //Create Detail
-        const detail = await createOrderDetail({...item, orderId: order.id});
-    });
+        //Get params
+        const {productId, quantity, unitPrice} = item;
 
-    return await getOrder({id: order.id});
+        //Get product
+        const product = await getProduct({id: productId});
+
+
+        //Calculate interest
+        const interest = (product.price - product.COGS) * quantity;
+
+        //Create Details
+        const detail = await createOrderDetail({
+            productId: product.id,
+            quantity,
+            interest,
+            orderId: order.id,
+            unitPrice
+        });
+
+        //update product price if it's note exist
+        if (product.price === null)
+            product.price = unitPrice;
+
+        const available = product.available !== null ? product.available : 0;
+
+        //Update available
+        product.available = available - quantity;
+
+        //Save updated product
+        await product.save();
+
+    });
+    const transactionRes = await getOrder({id: order.id});
+    return transactionRes;
 }
 
 async function createImport(data) {
@@ -139,8 +179,6 @@ async function createImport(data) {
 
     });
     const transactionRes = await getOrder({id: order.id});
-    console.log('transactionRes', transactionRes);
-    console.log(order.id);
     return transactionRes;
 }
 
@@ -162,7 +200,7 @@ export const addOrder = async function (req, res, next) {
         });
         res.send(result);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(400);
     }
 };
@@ -179,7 +217,6 @@ export const getOrderById = function (req, res) {
 //Search Order
 export const search = async function (req, res) {
     const cond = req.query;
-    console.log("query", cond);
     const orders = await searchOrder(cond);
     if (!orders) res.sendStatus(404);
     else res.send(orders);
