@@ -80,26 +80,16 @@ export async function getAvailableQuantity(productId) {
 module.exports.getProductById = async function (req, res) {
     let id = req.params.id;
 
+    const product = await Product.findOne({
+        where: {id},
+        include: [
+            {model: categories, as: 'category'},
+            {model: manufactures, as: 'manufacture'}
+        ],
+    });
 
-    // const product = await Product.findOne({
-    //     where: {id},
-    //     include: [{
-    //         model: OrderDetail,
-    //         include: [
-    //             {model: Order, attributes: ['orderTypeId']}
-    //         ],
-    //     }],
-    //     // attributes: [
-    //     //     [sequelize.fn('SUM', sequelize.col('orderDetails.quantity')), 'count'],
-    //     //     "name", "codeName", "description", "madeIn", "price"
-    //     // ],
-    //     // group: ['products.id']
-    // });
-
-    // if (!product) return res.sendStatus(404);
-    // res.send(product.get());
-
-    res.send(quantity);
+    if (!product) return res.sendStatus(404);
+    res.send(product.get());
 };
 
 module.exports.updateProductById = function (req, res) {

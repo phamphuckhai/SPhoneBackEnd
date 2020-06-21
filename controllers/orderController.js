@@ -87,7 +87,7 @@ async function createOrder(data) {
     const {CustomerId, orderDetail: details} = data;
     const orderTypeId = 2;
 
-    const amount = getTotal(details);
+    let amount = 0;
 
     const order = await Order.create(
         {
@@ -98,7 +98,7 @@ async function createOrder(data) {
     );
     await FOR_EACH(details, async (item) => {
         //Get params
-        const {productId, quantity, unitPrice} = item;
+        const {productId, quantity} = item;
 
         //Get product
         const product = await getProduct({id: productId});
@@ -107,18 +107,25 @@ async function createOrder(data) {
         //Calculate interest
         const interest = (product.price - product.COGS) * quantity;
 
+        //Caculate total of order
+        amount+=product.price;
+
         //Create Details
         const detail = await createOrderDetail({
             productId: product.id,
             quantity,
             interest,
             orderId: order.id,
-            unitPrice
+            unitPrice: product.price
         });
+
+        //Update order's value
+        order.amount = amount;
+        await order.save();
 
         //update product price if it's note exist
         if (product.price === null)
-            product.price = unitPrice;
+            throw new Error('Product price is not specified');
 
         const available = product.available !== null ? product.available : 0;
 
