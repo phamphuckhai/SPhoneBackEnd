@@ -40,6 +40,14 @@
       }
       ,
       {
+        "resource": "imports",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
+      ,
+      {
         "resource": "orderDetails",
         "action": "*",
         "attributes": [
