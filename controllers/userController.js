@@ -1,3 +1,5 @@
+import Permission from '../config/permission.json';
+
 const jwt = require("jsonwebtoken");
 const {validationResult} = require("express-validator");
 const passport = require("passport");
@@ -148,7 +150,8 @@ module.exports.login = async function (req, res, next) {
         console.log(user.get());
         if (!user) {
             res.status(401).json({msg: "No such user found", user});
-        };
+        }
+        ;
 
         bcrypt.compare(password, user.password, function (err, result) {
             if (result == true) {
@@ -195,5 +198,18 @@ module.exports.updateUserById = function (req, res) {
         user.update(newUsr).then((newUser) => res.json(newUser));
     });
 };
+
+module.exports.auth = async function (req, res) {
+    if (req.user) {
+        const user = await User.findOne({
+            where: {id: req.user.id},
+            attributes: {
+                exclude: ['password']
+            }
+        });
+        res.send({...user.get(), permissions: Permission[user.role] ? Permission[user.role]['grants'] : null});
+    } else
+        res.sendStatus(401);
+}
 
 module.exports.checkPassport = passport.authenticate("jwt", {session: false});

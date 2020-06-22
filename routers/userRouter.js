@@ -17,7 +17,7 @@ router.put("/:id", authorize("update", "users"), userController.updateUserById);
 //route delete user
 router.delete(
   "/:id",
-  authorize("delete", "users"),
+  authorize("DELETE", "users"),
   userController.deleteUserById
 );
 
