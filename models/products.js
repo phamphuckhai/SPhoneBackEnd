@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             COGS: {
                 type: DataTypes.BIGINT,
                 validate: {
-                    min: 1000
+                    min: 0
                 }
             },
             price: {
