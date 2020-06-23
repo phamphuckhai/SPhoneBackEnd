@@ -26,6 +26,7 @@
     "express-validator": "^6.5.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "moment": "^2.27.0",
     "mssql": "^6.2.0",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.3",
