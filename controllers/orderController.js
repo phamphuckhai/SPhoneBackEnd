@@ -108,7 +108,7 @@ async function createOrder(data) {
         const interest = (product.price - product.COGS) * quantity;
 
         //Caculate total of order
-        amount+=product.price;
+        amount += product.price * quantity;
 
         //Create Details
         const detail = await createOrderDetail({
@@ -121,6 +121,7 @@ async function createOrder(data) {
 
         //Update order's value
         order.amount = amount;
+        console.log('amount', amount);
         await order.save();
 
         //update product price if it's note exist
