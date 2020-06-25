@@ -7,6 +7,9 @@ const orderController = require("../controllers/orderController");
 //Search, get, get all orders
 router.get("/", authorize("read", "orders"), orderController.search);
 
+//Search, get, get all orders
+router.get("/v2", authorize("read", "orders"), orderController.searchByCus);
+
 //route get orders by id
 router.get("/:id", authorize("read", "orders"), orderController.getOrderById);
 
