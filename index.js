@@ -1,4 +1,4 @@
-import {customerRouter} from "./routers/customerRouter";
+import { customerRouter } from "./routers/customerRouter";
 
 const express = require("express");
 const app = express();
@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 //connect sequelize
-const {sequelize} = require("./models");
+const { sequelize } = require("./models");
 
 const authenticationRouter = require("./routers/authenticationRouter");
 const analyticsRouter = require('./routers/AnalyticsRouter');
@@ -15,14 +15,15 @@ const providerRouter = require("./routers/providerRouter");
 const productRoter = require("./routers/productRouter");
 const orderRouter = require("./routers/orderRouter");
 const orderDetailRouter = require("./routers/orderDetailRouter");
-const {permissionRouter} = require("./routers/permissionRouter");
+const categoryRouter = require("./routers/categoryRouter");
+const { permissionRouter } = require("./routers/permissionRouter");
 
-const {checkPassport} = require("./controllers/userController");
+const { checkPassport } = require("./controllers/userController");
 
 app.use(cors());
 //parse application
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //route to use
 app.use("/permissions", permissionRouter);
@@ -34,9 +35,10 @@ app.use("/products", checkPassport, productRoter);
 app.use("/orders", checkPassport, orderRouter);
 app.use("/orderDetails", checkPassport, orderDetailRouter);
 app.use("/analytics", analyticsRouter);
+app.use("/categories", checkPassport, categoryRouter);
 
 app.get("/", function (req, res) {
-    res.json({message: "Express is up!"});
+    res.json({ message: "Express is up!" });
 });
 
 //check connect

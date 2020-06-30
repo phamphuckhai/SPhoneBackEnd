@@ -54,7 +54,14 @@
           "*"
         ]
       }
-
+      ,
+      {
+        "resource": "categories",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
     ]
   }
 }
