@@ -21,40 +21,35 @@
         "attributes": [
           "*"
         ]
-      }
-      ,
+      },
       {
         "resource": "users",
         "action": "*",
         "attributes": [
           "*"
         ]
-      }
-      ,
+      },
       {
         "resource": "orders",
         "action": "*",
         "attributes": [
           "*"
         ]
-      }
-      ,
+      },
       {
         "resource": "imports",
         "action": "*",
         "attributes": [
           "*"
         ]
-      }
-      ,
+      },
       {
         "resource": "orderDetails",
         "action": "*",
         "attributes": [
           "*"
         ]
-      }
-      ,
+      },
       {
         "resource": "categories",
         "action": "*",
@@ -63,5 +58,14 @@
         ]
       }
     ]
+  },
+  "lalala": {
+    "grants": []
+  },
+  "ahahhaha": {
+    "grants": []
+  },
+  "kakakakak": {
+    "grants": []
   }
 }
