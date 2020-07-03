@@ -8,8 +8,8 @@ import {
     sequelize
 } from "../models";
 
-const createProduct = async ({name, codeName, description, madeIn, categoryId, manufactureId}) => {
-    const dbRes = await Product.create({name, codeName, description, madeIn, categoryId, manufactureId,});
+const createProduct = async ({name, codeName, description, madeIn, categoryId, manufactureId, status}) => {
+    const dbRes = await Product.create({name, codeName, description, madeIn, categoryId, manufactureId, status});
     return await getProduct({id: dbRes.id});
 };
 
@@ -54,9 +54,9 @@ const deleteProduct = async (condition) => {
 };
 
 module.exports.addProduct = function (req, res, next) {
-    const {name, codeName, description, madeIn, categoryId, manufactureId,} = req.body;
+    const {name, codeName, description, madeIn, categoryId, manufactureId, status} = req.body;
     createProduct({
-        name, codeName, description, madeIn, categoryId, manufactureId,
+        name, codeName, description, madeIn, categoryId, manufactureId, status
     }).then((products) => res.json(products));
 };
 

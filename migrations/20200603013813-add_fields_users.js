@@ -11,7 +11,17 @@ module.exports = {
           allowNull: false,
         }
       ),
+      queryInterface.addColumn(
+        "users", //table name
+        "status", //field name
+        {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: 0,
+        }
+      ),
     ]);
+    
   },
 
   down: (queryInterface, Sequelize) => {

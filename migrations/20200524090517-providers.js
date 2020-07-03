@@ -1,5 +1,7 @@
 "use strict";
 
+const { sequelize } = require("../models");
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("providers", {
@@ -23,6 +25,10 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
+      },
+      status:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0,
       },
     });
   },

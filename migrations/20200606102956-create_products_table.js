@@ -30,6 +30,10 @@ module.exports = {
       price: {
         type: Sequelize.INTEGER,
       },
+      status:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0,
+      }
     });
   },
 

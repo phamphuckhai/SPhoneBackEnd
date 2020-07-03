@@ -41,6 +41,7 @@ const createUser = async ({
                               phone,
                               address,
                               email,
+                              status,
                           }) => {
     return await User.create({
         name,
@@ -50,6 +51,7 @@ const createUser = async ({
         phone,
         address,
         email,
+        status,
     });
 };
 
@@ -110,7 +112,7 @@ module.exports.register = async function (req, res, next) {
         return res.status(422).json({errors: errors.array()});
     }
     console.log("req", req.body);
-    let {name, password, role, fullname, phone, address, email} = req.body;
+    let {name, password, role, fullname, phone, address, email, status} = req.body;
     if (name && password) {
         let user = await getUser({name});
         if (!user) {
@@ -126,6 +128,7 @@ module.exports.register = async function (req, res, next) {
                     phone,
                     address,
                     email,
+                    status,
                 }).then((users) =>
                     res.json({users, msg: "account created successfully "})
                 );
