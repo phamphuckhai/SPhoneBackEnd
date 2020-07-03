@@ -48,8 +48,7 @@ const deleteRolefuntion = async (role) => {
     // // const tmp = '{"'+role+'":{}}'
     // // console.log(Obj);
     // // console.log();
-    // return await db.remove(Obj)
-    // .write()
+
 
     
 };
@@ -106,7 +105,10 @@ module.exports.deleteGrant = async function (req, res, next) {
 
 module.exports.deleteRole = async function (req, res, next) {
     const role = req.params.role;
-    await deleteRolefuntion(role);
+    // await deleteRolefuntion(role);
+   await db.get('lalala')
+    .remove({grants: 'a'})
+    .write()
     return res.send(db.value());
     // console.log(resource);
 };
