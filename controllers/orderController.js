@@ -124,6 +124,7 @@ async function createOrder(data) {
   const order = await Order.create({
     CustomerId,
     orderTypeId,
+    userId,
     amount,
   });
   await FOR_EACH(details, async (item) => {
@@ -188,6 +189,7 @@ async function createImport(data) {
   const order = await Order.create({
     providerId,
     orderTypeId,
+    userId,
     amount,
   });
   await FOR_EACH(details, async (item) => {
