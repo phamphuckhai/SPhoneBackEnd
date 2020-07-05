@@ -8,7 +8,7 @@ import { Op } from "sequelize";
 
 const Order = require("../models").orders;
 const { Sequelize, sequelize } = require("../models");
-const { orderDetails, Customer, orderTypes } = require("../models");
+const { orderDetails, Customer, orderTypes, users } = require("../models");
 
 const searchOrder = async (condition) => {
   let Option = {};
@@ -93,6 +93,10 @@ const getOrder = async (condition) => {
         model: orderTypes,
         as: "orderType",
       },
+      {
+        model: users,
+        as: "user"
+      }
     ],
     attributes: {
       exclude: ["updatedAt"],
@@ -109,7 +113,7 @@ function getTotal(details) {
   return amount;
 }
 
-async function createOrder(data) {
+async function createOrder(data, user) {
   //Create Order
   //For each order detail
   //Create detail
@@ -118,6 +122,8 @@ async function createOrder(data) {
 
   const { CustomerId, orderDetail: details } = data;
   const orderTypeId = 2;
+
+  const userId = user.id;
 
   let amount = 0;
 
@@ -170,7 +176,7 @@ async function createOrder(data) {
   return transactionRes;
 }
 
-async function createImport(data) {
+async function createImport(data, user) {
   //Create Order
   //For each order detail
   //Create detail
@@ -185,6 +191,8 @@ async function createImport(data) {
   details.forEach((it) => {
     amount += it.unitPrice * it.quantity;
   });
+
+  const userId = user.id;
 
   const order = await Order.create({
     providerId,
@@ -234,10 +242,10 @@ export const addOrder = async function (req, res, next) {
     const result = await sequelize.transaction(async (t) => {
       switch (orderTypeId) {
         case 1:
-          return await createImport(req.body);
+          return await createImport(req.body, req.user);
           break;
         case 2:
-          return await createOrder(req.body);
+          return await createOrder(req.body, req.user);
           break;
         default:
           res.sendStatus(400);
