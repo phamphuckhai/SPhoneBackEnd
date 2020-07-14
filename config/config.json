@@ -5,8 +5,7 @@
     "database": "b20ldl5rqjcakencohit",
     "host": "b20ldl5rqjcakencohit-mysql.services.clever-cloud.com",
     "dialect": "mysql",
-    "operatorsAliases": false,
-    "use_env_variable": "DATABASE_URL"
+    "operatorsAliases": false
   },
   "test": {
     "username": "root",
