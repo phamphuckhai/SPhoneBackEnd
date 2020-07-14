@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "root",
-    "password": "123123asD",
-    "database": "sphone",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
+    "username": "nokshqqvghpuuo",
+    "password": "c834c688db1d3011de4e957e70862816730d860232f30faa5e4f046642c2ec1c",
+    "database": "dfh751onv7hbca",
+    "host": "ec2-54-197-254-117.compute-1.amazonaws.com",
+    "dialect": "postgres",
     "operatorsAliases": false
   },
   "test": {
