@@ -1,12 +1,11 @@
 {
   "development": {
-    "username": "nokshqqvghpuuo",
-    "password": "c834c688db1d3011de4e957e70862816730d860232f30faa5e4f046642c2ec1c",
-    "database": "dfh751onv7hbca",
-    "host": "ec2-54-197-254-117.compute-1.amazonaws.com",
-    "dialect": "postgres",
-    "operatorsAliases": false,
-    "use_env_variable": "DATABASE_URL"
+    "username": "sql12354863",
+    "password": "Bt5jFrsq7p",
+    "database": "sql12354863",
+    "host": "sql12.freemysqlhosting.net",
+    "dialect": "mysql",
+    "operatorsAliases": false
   },
   "test": {
     "username": "root",
