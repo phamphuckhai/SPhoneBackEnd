@@ -5,7 +5,8 @@
     "database": "sql12354863",
     "host": "sql12.freemysqlhosting.net",
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "use_env_variable": "DATABASE_URL"
   },
   "test": {
     "username": "root",
