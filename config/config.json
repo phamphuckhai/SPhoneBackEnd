@@ -5,7 +5,8 @@
     "database": "dfh751onv7hbca",
     "host": "ec2-54-197-254-117.compute-1.amazonaws.com",
     "dialect": "postgres",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "use_env_variable": "DATABASE_URL"
   },
   "test": {
     "username": "root",
