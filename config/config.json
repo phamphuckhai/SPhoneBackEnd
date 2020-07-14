@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "sql12354863",
-    "password": "Bt5jFrsq7p",
-    "database": "sql12354863",
-    "host": "sql12.freemysqlhosting.net",
+    "username": "upwiyxui7mf05xef",
+    "password": "RLWxTkHkU90VTpGOY4uh",
+    "database": "b20ldl5rqjcakencohit",
+    "host": "b20ldl5rqjcakencohit-mysql.services.clever-cloud.com",
     "dialect": "mysql",
     "operatorsAliases": false,
     "use_env_variable": "DATABASE_URL"
