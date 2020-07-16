@@ -58,5 +58,69 @@
         ]
       }
     ]
+  },
+  "salesman": {
+    "grants": [
+      {
+        "resource": "customers",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "products",
+        "action": "read",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "orders",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "categories",
+        "action": "read",
+        "attributes": [
+          "*"
+        ]
+      }
+    ]
+  },
+  "warehouseman": {
+    "grants": [
+      {
+        "resource": "providers",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "products",
+        "action": "read",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "categories",
+        "action": "read",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "orders",
+        "action": "*",
+        "attributes": [
+          "*"
+        ]
+      }
+    ]
   }
 }
