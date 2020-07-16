@@ -11,11 +11,7 @@ const createProvider = async ({ name, address, phone, website, email, status }) 
 const searchProvider = async (condition) => {
   let Option = {};
   Object.keys(condition).forEach((val, index) => {
-    if (isNaN(condition[val])) {
       Option[val] = { [Sequelize.Op.like]: `%${condition[val]}%` };
-    } else {
-      Option[val] = parseInt(condition[val], 10);
-    }
   });
   return await provider.findAll({
     where: Option,
