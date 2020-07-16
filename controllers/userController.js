@@ -5,6 +5,7 @@ const {validationResult} = require("express-validator");
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 const bcrypt = require("bcrypt");
+const { Sequelize } = require("../models");
 
 const User = require("../models").users;
 let ExtractJwt = passportJWT.ExtractJwt;
@@ -60,6 +61,7 @@ const searchUser = async (condition) => {
     Object.keys(condition).forEach((val, index) => {
         Option[val] = { [Sequelize.Op.like]: `%${condition[val]}%` };
     });
+    console.log(Option);
     return User.findAll({
         where: Option,
         attributes: {
