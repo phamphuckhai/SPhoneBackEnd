@@ -17,6 +17,7 @@ const orderRouter = require("./routers/orderRouter");
 const orderDetailRouter = require("./routers/orderDetailRouter");
 const categoryRouter = require("./routers/categoryRouter");
 const roleRouter = require("./routers/roleRouter");
+const manufactureRouter = require("./routers/manufactureRouter");
 const { permissionRouter } = require("./routers/permissionRouter");
 
 const { checkPassport } = require("./controllers/userController");
@@ -38,6 +39,7 @@ app.use("/orderDetails", checkPassport, orderDetailRouter);
 app.use("/analytics", analyticsRouter);
 app.use("/categories", checkPassport, categoryRouter);
 app.use("/roles", checkPassport, roleRouter);
+app.use("/manufacture", checkPassport, manufactureRouter);
 
 app.get("/", function (req, res) {
     res.json({ message: "Express is up!" });
