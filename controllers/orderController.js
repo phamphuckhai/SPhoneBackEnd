@@ -35,38 +35,100 @@ const searchOrder = async (condition) => {
 };
 
 const searchOrderByCus = async (condition) => {
-  var phone = condition.phone;
-  var name = condition.name;
-  if(name==null){
-    name = "";
-  }
-  if(phone==null){
-    phone = "";
-  }
-
-
-  return Order.findAll({
-    subQuery: false,
-    where: {
-      "$Customer.name$": {
-        [Op.like]: `%${name}%`,
-      },
-      "$Customer.phone$": {
-        [Op.like]: `%${phone}`,
-      },
-      orderTypeId: 1,
-    },
-    include: [
-      {
-        model: Customer,
-        as: "Customer",
-      },
-      {
-        model: Provider,
-        as: "provider",
-      },
-    ],
+  let Option = {};
+  var searchSpecial = false;
+  Object.keys(condition).forEach((val, index) => {
+    if (val == "name" || val == "phone") {
+      searchSpecial = true;
+      console.log("it's name and phone");
+    }
+    else if (isNaN(condition[val])) {
+      Option[val] = { [Sequelize.Op.like]: `%${condition[val]}%` };
+    } else {
+      Option[val] = parseInt(condition[val], 10);
+    }
   });
+  Option["orderTypeId"] = 2;
+  console.log(Option);
+  if (searchSpecial) {
+    var phone = condition.phone;
+    var name = condition.name;
+    if (name == null) {
+      name = "";
+    }
+    if (phone == null) {
+      phone = "";
+    }
+    return Order.findAll({
+      subQuery: false,
+      where: {
+        "$Customer.name$": {
+          [Op.like]: `%${name}%`,
+        },
+        "$Customer.phone$": {
+          [Op.like]: `%${phone}`,
+        },
+        orderTypeId: 2,
+      },
+      include: [
+        {
+          model: Customer,
+          as: "Customer",
+        },
+        {
+          model: Provider,
+          as: "provider",
+        },
+      ],
+    });
+  } else {
+    return Order.findAll({
+      where:
+        Option,
+      include: [
+        {
+          model: Customer,
+          as: "Customer",
+        },
+        {
+          model: Provider,
+          as: "provider",
+        },
+      ],
+    });
+  }
+
+  // var phone = condition.phone;
+  // var name = condition.name;
+  // if(name==null){
+  //   name = "";
+  // }
+  // if(phone==null){
+  //   phone = "";
+  // }
+
+
+  // return Order.findAll({
+  //   subQuery: false,
+  //   where: {
+  //     "$Customer.name$": {
+  //       [Op.like]: `%${name}%`,
+  //     },
+  //     "$Customer.phone$": {
+  //       [Op.like]: `%${phone}`,
+  //     },
+  //   },
+  //   include: [
+  //     {
+  //       model: Customer,
+  //       as: "Customer",
+  //     },
+  //     {
+  //       model: Provider,
+  //       as: "provider",
+  //     },
+  //   ],
+  // });
 };
 
 const getOrder = async (condition) => {
