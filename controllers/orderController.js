@@ -54,6 +54,7 @@ const searchOrderByCus = async (condition) => {
       "$Customer.phone$": {
         [Op.like]: `%${phone}`,
       },
+      orderTypeId: 1,
     },
     include: [
       {
