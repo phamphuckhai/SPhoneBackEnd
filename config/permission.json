@@ -81,6 +81,13 @@
         "attributes": [
           "*"
         ]
+      },
+      {
+        "resource": "categories",
+        "action": "read",
+        "attributes": [
+          "*"
+        ]
       }
     ]
   },
@@ -95,6 +102,13 @@
       },
       {
         "resource": "products",
+        "action": "read",
+        "attributes": [
+          "*"
+        ]
+      },
+      {
+        "resource": "categories",
         "action": "read",
         "attributes": [
           "*"
