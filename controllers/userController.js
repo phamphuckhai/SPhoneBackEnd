@@ -58,11 +58,7 @@ const createUser = async ({
 const searchUser = async (condition) => {
     let Option = {};
     Object.keys(condition).forEach((val, index) => {
-        if (typeof condition[val] == "string") {
-            Option[val] = {[Sequelize.Op.like]: `%${condition[val]}%`};
-        } else {
-            Option[val] = condition[val];
-        }
+        Option[val] = { [Sequelize.Op.like]: `%${condition[val]}%` };
     });
     return User.findAll({
         where: Option,
