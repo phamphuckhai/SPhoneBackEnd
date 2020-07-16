@@ -63,7 +63,7 @@
     "grants": [
       {
         "resource": "customers",
-        "action": "read",
+        "action": "*",
         "attributes": [
           "*"
         ]
@@ -95,7 +95,7 @@
     "grants": [
       {
         "resource": "providers",
-        "action": "read",
+        "action": "*",
         "attributes": [
           "*"
         ]
