@@ -170,11 +170,11 @@ module.exports.deleteUserById = function (req, res) {
     deleteUser({id}).then((user) => res.json("delete successfully!"));
 };
 
-module.exports.updateUserById = function (req, res) {
+module.exports.updateUserById = async function (req, res) {
     let id = req.params.id;
     let newUsr = req.body;
     if (newUsr.password) {
-        bcrypt.hash(newUsr.password, 10, function (err, res) {
+        await bcrypt.hash(newUsr.password, 10, function (err, res) {
             newUsr.password = res;
         })
     }
