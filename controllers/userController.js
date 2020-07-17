@@ -181,7 +181,7 @@ module.exports.updateUserById = function (req, res) {
     const {name} = req.body;
     getUser({id}).then((user) => {
         if (!user) return res.status(404).json({msg: "don't have user"});
-        else if (user.name == name)
+        else if (user.name !== name)
             return res.status(404).json({msg: "U can't change username"});
         user.update(newUsr).then((newUser) => res.json(newUser));
     });
