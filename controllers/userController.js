@@ -174,8 +174,10 @@ module.exports.updateUserById = async function (req, res) {
     let id = req.params.id;
     let newUsr = req.body;
     if (newUsr.password) {
-        await bcrypt.hash(newUsr.password, 10, function (err, res) {
-            newUsr.password = res;
+        newUsr.password = await new Promise((resolve, reject) => {
+            bcrypt.hash(newUsr.password, 10, function (err, res) {
+                resolve(res);
+            })  
         })
     }
     const {name} = req.body;
