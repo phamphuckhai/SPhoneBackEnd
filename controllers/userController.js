@@ -5,7 +5,7 @@ const {validationResult} = require("express-validator");
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 const bcrypt = require("bcrypt");
-const { Sequelize } = require("../models");
+const {Sequelize} = require("../models");
 
 const User = require("../models").users;
 let ExtractJwt = passportJWT.ExtractJwt;
@@ -34,32 +34,14 @@ passport.use(strategy);
 passport.initialize();
 
 //create user
-const createUser = async ({
-                              name,
-                              password,
-                              role,
-                              fullname,
-                              phone,
-                              address,
-                              email,
-                              status,
-                          }) => {
-    return await User.create({
-        name,
-        password,
-        role,
-        fullname,
-        phone,
-        address,
-        email,
-        status,
-    });
+const createUser = async ({name, password, role, fullname, phone, address, email, status}) => {
+    return await User.create({name, password, role, fullname, phone, address, email, status});
 };
 
 const searchUser = async (condition) => {
     let Option = {};
     Object.keys(condition).forEach((val, index) => {
-        Option[val] = { [Sequelize.Op.like]: `%${condition[val]}%` };
+        Option[val] = {[Sequelize.Op.like]: `%${condition[val]}%`};
     });
     console.log(Option);
     return User.findAll({
@@ -191,6 +173,11 @@ module.exports.deleteUserById = function (req, res) {
 module.exports.updateUserById = function (req, res) {
     let id = req.params.id;
     let newUsr = req.body;
+    if (newUsr.password) {
+        bcrypt.hash(newUsr.password, 10, function (err, res) {
+            newUsr.password = res;
+        })
+    }
     const {name} = req.body;
     getUser({id}).then((user) => {
         if (!user) return res.status(404).json({msg: "don't have user"});
